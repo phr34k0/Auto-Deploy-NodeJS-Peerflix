@@ -1,0 +1,124 @@
+#!/bin/bash
+
+install_node_latest()
+{
+	if ! [ -x "$(which node)" ]; then
+		wget https://nodejs.org/dist/v5.4.1/node-v5.4.1-linux-x64.tar.gz
+		sleep 2
+		clear
+
+		ls -a
+
+		sleep 5
+		echo -e "\n\n Extracting Package.. Please wait...\n\n"
+		tar -xzf node-v5.4.1-linux-x64.tar.gz
+
+		cd node-*
+		cd bin
+		chmod 755 *
+
+		if [ ! -d "/usr/local/bin" ]; then
+			echo -e "Dir Doesn't Exist.. Making\n"
+			mkdir /usr/local/bin
+		else
+			echo -e "Dir Exists.. Continuing\n"
+		fi
+
+		mv * /usr/local/bin
+
+		cd ../include
+		chmod 755 *
+
+		if [ ! -d "/usr/local/include" ]; then
+			echo -e "Dir Doesn't Exist.. Making\n"
+			mkdir /usr/local/include
+		else
+			echo -e "Dir Exists.. Continuing\n"
+		fi
+
+		mv * /usr/local/include
+
+		cd ../lib
+		chmod 755 *
+
+		if [ ! -d "/usr/local/lib" ]; then
+			echo -e "Dir Doesn't Exist.. Making\n"
+			mkdir /usr/local/lib
+		else
+			echo -e "Dir Exists.. Continuing\n"
+		fi
+
+		mv * /usr/local/lib
+
+		cd ../share
+		chmod 755 *
+
+		if [ ! -d "/usr/local/share" ]; then
+			echo -e "Dir Doesn't Exist.. Making\n"
+			mkdir /usr/local/share
+		else
+			echo -e "Dir Exists.. Continuing\n"
+		fi
+
+		mv * /usr/local/share
+
+		if ! [ -x "$(which nodejs)" ]; then
+			ln -sf `which node` /usr/local/bin/nodejs
+		fi
+
+	elif ! [ -x "$(which nodejs)" ]; then
+		ln -sf `which node` /usr/local/bin/nodejs
+
+	else
+		echo -e "- Node.JS is installed. `which node`. Current Version - `node -v`\n"
+	fi
+
+	if ! [ -x "$(which npm)" ]; then
+		curl -L https://npmjs.org/install.sh | sh
+	else
+		echo -e "- NPM is installed. `which npm`. Current Version - v`npm -v`\n"
+	fi
+}
+
+install_peerflix()
+{
+	if ! [ -x "$(which peerflix)" ]; then
+		npm -g install peerflix
+	else
+		echo -e "- Peerflix is installed. `which peerflix`\n"
+	fi
+
+	if ! [ -x "$(which forever)" ]; then
+		npm -g install forever
+	else
+		echo -e "- Forever is installed. `which forever`\n"
+	fi
+
+	if ! [ -x "$(which peerflix-server)" ]; then
+		npm -g install peerflix-server
+	else
+		echo -e "- Peerflix Server is installed. `which peerflix-server`\n"
+	fi
+}
+
+echo -e "\n\n"
+echo -e "---------------------------------"
+echo -e " Checking for Installation Now..."
+echo -e "---------------------------------\n\n"
+clear
+echo -e "\n\n-------- Checking for Node and NPM\n\n"
+install_node_latest
+echo -e "\n\n-------- Checking for Peerflix, Forever and Peerflix Server\n\n"
+install_peerflix
+clear
+echo -e "\n\nAll Done\n\n"
+sleep 2
+echo -e "------ Check Everything\n"
+install_node_latest
+install_peerflix
+echo -e "------ Remove Useless\n"
+cd $HOME
+rm -rf node*
+ls -A --color=auto
+sleep 3
+exit 0
